@@ -27,7 +27,7 @@ curl http://localhost:8081/
 
 Check express log.
 ```sh
-docker logs <container id>;
+docker logs app;
 # Output: Running on http://0.0.0.0:3000
 ```
 
@@ -35,7 +35,7 @@ Connect to container.
 -i: Keep STDIN open even if not attached.  
 -t: Allocate a pseudo-TTY(teletypewriter).
 ```sh
-docker exec -it <container id> bash
+docker exec -it app bash
 ```
 
 ## Other commands
