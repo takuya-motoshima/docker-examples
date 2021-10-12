@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  app:
+    container_name: app
+
+    # The path where the Dockerfile is located.
+    build: ./src
+
+    # Host-side port: Container port.
+    ports:
+      - '8081:3000'
+
+    # Mount the source code (mount src on the host side to /usr/src/app on the container).
+    volumes:
+      - ./src:/usr/src/app
+
+    # # Current directory after starting the container.
+    # # This is the default hierarchy when the command in the container is executed.
+    # working_dir: /usr/src/app
+
+    # Keep starting the container.
+    tty: true
+
+    # Run the app. The CMD for the Dockerfile will be overwritten and the original CMD for the Dockerfile will be invalid.
+    # command: npm start

@@ -1,0 +1,13 @@
+{
+  "name": "express-and-mariadb-app",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "Takuya Motoshima <developer.takuyamotoshima@gmail.com> (https://twitter.com/TakuyaMotoshima)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.16.1"
+  }
+}
