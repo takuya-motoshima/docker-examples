@@ -5,10 +5,16 @@
 ```sh
 express-and-mariadb-app
   |-- .dockerignore
-  |-- app.js
-  |-- Dockerfile
-  |-- package.json
-  `-- README.md
+  |-- docker-compose.yml
+  |-- init.sql
+  |-- README.md
+  `-- src
+      |-- app.js
+      |-- db.js
+      |-- Dockerfile
+      |-- package-lock.json
+      |-- package.json
+      `-- node_modules
 ```
 
 ## Usage
@@ -19,13 +25,23 @@ Run container.
 docker-compose up -d
 ```
 
+Check container.
+```sh
+docker container list
+# Output: CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+#         0da67f795e51   express-and-mariadb-app_app   "node app.js"            11 seconds ago   Up 9 seconds    0.0.0.0:8081->3000/tcp, :::8081->3000/tcp   app
+#         c9b7e0c8309d   mariadb:latest                "docker-entrypoint.s…"   12 seconds ago   Up 10 seconds   0.0.0.0:3306->3306/tcp, :::3306->3306/tcp   mariadb
+```
+
 Test.
 ```sh
 curl http://localhost:8081/
-# Outut: Hello express-and-mariadb-app
+# Outut: [{"name":"churros"},{"name":"gelato"},{"name":"halo-halo"},{"name":"mochi"}]
 ```
 
-Check express log.
+## Other commands
+
+Check container logs.
 ```sh
 docker logs app;
 # Output: Running on http://0.0.0.0:3000
@@ -37,8 +53,6 @@ Connect to container.
 ```sh
 docker exec -it app bash
 ```
-
-## Other commands
 
 Dockerfile or reflect changes in build process.
 ```sh

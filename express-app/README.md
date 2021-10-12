@@ -45,7 +45,9 @@ curl http://localhost:8080/
 # Outut: Hello express-app
 ```
 
-Check express log.
+## Other commands
+
+Check container logs.
 ```sh
 docker logs <container id>;
 # Output: Running on http://0.0.0.0:3000

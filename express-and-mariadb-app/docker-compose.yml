@@ -2,18 +2,26 @@ version: '3'
 
 services:
   app:
+    # Give the container a name. You can operate the container with this name.
     container_name: app
 
     # The path where the Dockerfile is located.
-    build: ./src
+    build:
+      context: ./src
 
     # Host-side port: Container port.
     ports:
       - '8081:3000'
 
-    # Mount the source code (mount src on the host side to /usr/src/app on the container).
+    # Data persistence area.
     volumes:
+      # Mount the source code (mount src on the host side to /usr/src/app on the container).
       - ./src:/usr/src/app
+
+    # # Set environment variables in the container.
+    # environment:
+    #   # OS timezone. This environment variable TZ is set in / etc / localtime by RUN in src / Dockerfile.
+    #   TZ: Asia/Tokyo
 
     # # Current directory after starting the container.
     # # This is the default hierarchy when the command in the container is executed.
@@ -22,5 +30,40 @@ services:
     # Keep starting the container.
     tty: true
 
-    # Run the app. The CMD for the Dockerfile will be overwritten and the original CMD for the Dockerfile will be invalid.
+    # Run the app. The CMD for the Dockerfile will be overwritten adockernd the original CMD for the Dockerfile will be invalid.
     # command: npm start
+    # command: sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone"
+
+    # The app service depends on the mariadb service.
+    # The following controls are taken when you run "docker-compose up", "docker-compose run", "docker-compose stop".
+    #   docker-compose up: Start in the order of mariadb, app.
+    #   docker-compose run: Same as docker-compose up.
+    #   docker-compose stop: stop in the order of app, mariadb.
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+
+    # Give the container a name. You can operate the container with this name.
+    container_name: mariadb
+
+    # Host-side port: Container port.
+    ports:
+      - "3306:3306"
+
+    # Set environment variables in the container.
+    environment: 
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+      TZ: Asia/Tokyo
+
+    # Run the app. The CMD for the Dockerfile will be overwritten and the original CMD for the Dockerfile will be invalid.
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone=+09:00
+
+    # Data persistence area.
+    volumes:
+      # Persist MySQL data
+      - ./db_data:/var/lib/mysql
+
+      # Execute init.sql to initialize the DB when you build the image.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
